@@ -57,18 +57,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({
       <div className="absolute top-4 left-4 right-4 sm:top-6 sm:left-6 sm:right-6 flex items-center justify-between z-10 max-w-5xl mx-auto w-auto">
         <button
           onClick={onGoHome}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-[#A7B0C0] hover:text-[#F8FAFC] bg-[#121722] border border-[#222936] hover:bg-[#161C27] transition-all shadow-sm"
+          className="h-9 px-3 sm:px-3.5 inline-flex items-center gap-1.5 rounded-xl text-xs font-medium text-[#A7B0C0] hover:text-[#F8FAFC] bg-[#121722] border border-[#222936] hover:bg-[#161C27] transition-all shadow-sm"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          {t('common.back', 'Back to Home')}
+          <ArrowLeft className="w-3.5 h-3.5 shrink-0" />
+          <span>{t('common.back', 'Back to Home')}</span>
         </button>
 
         <button
           onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#121722] text-[#A7B0C0] border border-[#222936] hover:border-violet-500 hover:text-[#F8FAFC] transition-all shadow-sm"
+          className="h-9 px-3 sm:px-3.5 inline-flex items-center gap-1.5 rounded-xl text-xs font-semibold bg-[#121722] text-[#A7B0C0] border border-[#222936] hover:border-violet-500 hover:text-[#F8FAFC] transition-all shadow-sm"
           title={t('header.changeLanguage', 'Change Language')}
         >
-          <Languages className="w-3.5 h-3.5 text-violet-400" />
+          <Languages className="w-3.5 h-3.5 text-violet-400 shrink-0" />
           <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
         </button>
       </div>

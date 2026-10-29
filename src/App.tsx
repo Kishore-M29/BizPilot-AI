@@ -497,6 +497,7 @@ export const App: React.FC = () => {
           <GrowthIntelligenceView
             profile={currentProfile}
             analysis={analysis}
+            organization={activeOrg}
             onNavigate={(tab) => setActiveTab(tab)}
           />
         );

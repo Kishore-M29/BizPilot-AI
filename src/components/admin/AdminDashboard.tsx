@@ -175,36 +175,36 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSwitchToUserWo
       
       {/* Admin Header */}
       <header className="sticky top-0 z-40 w-full border-b border-[#222936] bg-[#0B0E14]/90 backdrop-blur-xl shadow-2xs">
-        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 min-h-16 py-2 sm:py-0 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-1.5 sm:gap-4">
           
           {/* Brand & Admin Badge */}
-          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-violet-600 flex items-center justify-center text-white shadow-sm shrink-0">
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="h-9 w-9 rounded-xl bg-violet-600 inline-flex items-center justify-center text-white shadow-sm shrink-0">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <div className="min-w-0">
-              <div className="text-sm sm:text-base font-extrabold text-[#F8FAFC] flex items-center gap-1.5 sm:gap-2 truncate">
-                BizPilot <span className="text-violet-400">AI</span>
-                <span className="text-[9px] sm:text-[10px] uppercase font-black px-1.5 sm:px-2 py-0.5 rounded-md bg-violet-950/60 text-violet-300 border border-violet-800/50 shrink-0">
+            <div className="flex flex-col justify-center min-w-0">
+              <div className="text-sm sm:text-base font-extrabold text-[#F8FAFC] flex items-center gap-1.5 sm:gap-2 truncate leading-none">
+                <span>BizPilot</span> <span className="text-violet-400 font-black">AI</span>
+                <span className="text-[9px] sm:text-[10px] uppercase font-black px-1.5 sm:px-2 py-0.5 rounded-md bg-violet-950/60 text-violet-300 border border-violet-800/50 shrink-0 leading-tight">
                   {t('admin.adminBadge', 'SUPER ADMIN')}
                 </span>
               </div>
-              <p className="text-[9px] sm:text-[10px] text-[#707A8C] -mt-0.5 truncate hidden xs:block">
+              <p className="text-[9px] sm:text-[10px] text-[#707A8C] hidden xs:block mt-1 leading-tight truncate">
                 {t('admin.adminPortal', 'Platform Management Console')}
               </p>
             </div>
           </div>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             
             {/* Language Selector */}
             <button
               onClick={() => setLanguage(language === 'en' ? 'ta' : 'en')}
-              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#121722] hover:bg-[#161C27] text-[#F8FAFC] border border-[#222936] transition-all shadow-sm"
+              className="h-9 px-2.5 sm:px-3 inline-flex items-center justify-center gap-1.5 rounded-xl text-xs font-semibold bg-[#121722] hover:bg-[#161C27] text-[#F8FAFC] border border-[#222936] transition-all shadow-sm shrink-0"
               title={t('header.changeLanguage', 'Change Language')}
             >
-              <Languages className="w-3.5 h-3.5 text-violet-400" />
+              <Languages className="w-3.5 h-3.5 text-violet-400 shrink-0" />
               <span>{language === 'en' ? 'தமிழ்' : 'English'}</span>
             </button>
 
@@ -212,25 +212,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSwitchToUserWo
             {onSwitchToUserWorkspace && (
               <button
                 onClick={onSwitchToUserWorkspace}
-                className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#121722] hover:bg-[#161C27] border border-[#222936] text-xs font-semibold text-violet-300 shadow-sm transition-all"
+                className="hidden md:inline-flex items-center justify-center gap-1.5 h-9 px-3.5 rounded-xl bg-[#121722] hover:bg-[#161C27] border border-[#222936] text-xs font-semibold text-violet-300 shadow-sm transition-all shrink-0"
               >
-                <Building className="w-3.5 h-3.5" />
+                <Building className="w-3.5 h-3.5 shrink-0" />
                 <span>{t('admin.switchToUserView', 'Preview MSME Workspace')}</span>
               </button>
             )}
 
             {/* Admin User Pill & Logout */}
-            <div className="flex items-center gap-2 pl-2 border-l border-[#222936]">
-              <div className="text-right hidden lg:block">
+            <div className="flex items-center gap-2 pl-2 border-l border-[#222936] shrink-0">
+              <div className="text-right hidden lg:block leading-tight">
                 <div className="text-xs font-semibold text-[#F8FAFC]">{user?.displayName || 'Administrator'}</div>
                 <div className="text-[10px] text-[#707A8C]">{user?.email}</div>
               </div>
               <button
                 onClick={logout}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-[#121722] hover:bg-rose-950/40 hover:text-rose-300 hover:border-rose-800/40 border border-[#222936] text-xs font-semibold text-[#A7B0C0] shadow-sm transition-all"
+                className="h-9 w-9 sm:w-auto sm:px-3 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#121722] hover:bg-rose-950/40 hover:text-rose-300 hover:border-rose-800/40 border border-[#222936] text-xs font-semibold text-[#A7B0C0] shadow-sm transition-all shrink-0"
                 title={t('auth.logout', 'Log Out')}
               >
-                <LogOut className="w-3.5 h-3.5 text-[#707A8C]" />
+                <LogOut className="w-3.5 h-3.5 text-[#707A8C] shrink-0" />
                 <span className="hidden sm:inline">{t('auth.logout', 'Log Out')}</span>
               </button>
             </div>

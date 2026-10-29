@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MSMEProfile, LanguageCode } from '../../types';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { 
@@ -66,6 +66,37 @@ export const Header: React.FC<HeaderProps> = ({
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false);
+        setLangDropdownOpen(false);
+        setNotifOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleProfileDropdown = () => {
+    setProfileDropdownOpen((prev) => !prev);
+    setLangDropdownOpen(false);
+    setNotifOpen(false);
+  };
+
+  const toggleLangDropdown = () => {
+    setLangDropdownOpen((prev) => !prev);
+    setProfileDropdownOpen(false);
+    setNotifOpen(false);
+  };
+
+  const toggleNotifDropdown = () => {
+    setNotifOpen((prev) => !prev);
+    setProfileDropdownOpen(false);
+    setLangDropdownOpen(false);
+  };
 
   const supportedLanguages = [
     { code: 'en' as const, label: 'English', native: 'English', flag: '🇬🇧' },
@@ -79,48 +110,48 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[#222936] bg-[#0B0E14]/90 backdrop-blur-xl shadow-lg shadow-black/20">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4">
+    <header ref={headerRef} className="sticky top-0 z-40 w-full border-b border-[#222936] bg-[#0B0E14]/90 backdrop-blur-xl shadow-lg shadow-black/20">
+      <div className="w-full max-w-[1920px] mx-auto px-2.5 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-6">
         
-        {/* Brand Logo & Switcher & Hamburger */}
-        <div className="flex items-center gap-2 sm:gap-4 lg:gap-6 min-w-0">
+        {/* Brand Logo, Switcher & Hamburger */}
+        <div className="flex items-center gap-1.5 sm:gap-3 lg:gap-4 shrink-0">
           {/* Mobile Hamburger Button */}
           {isAppMode && onToggleMobileMenu && (
             <button
               onClick={onToggleMobileMenu}
-              className="lg:hidden p-2 rounded-xl bg-[#121722] hover:bg-[#161C27] border border-[#222936] text-[#A7B0C0] hover:text-[#F8FAFC] transition-all shrink-0 focus:outline-none"
+              className="lg:hidden h-9 w-9 inline-flex items-center justify-center rounded-xl bg-[#121722] hover:bg-[#161C27] border border-[#222936] text-[#A7B0C0] hover:text-[#F8FAFC] transition-all shrink-0 focus:outline-none focus:ring-1 focus:ring-[#8B5CF6]/50"
               aria-label="Toggle navigation drawer"
               title="Open Navigation"
             >
-              <Menu className="w-5 h-5 text-[#8B5CF6]" />
+              <Menu className="w-4.5 h-4.5 text-[#8B5CF6]" />
             </button>
           )}
 
           <div 
             onClick={() => onToggleAppMode(false)}
-            className="flex items-center gap-2 cursor-pointer group shrink-0"
+            className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group shrink-0 select-none"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-[#8B5CF6] to-[#7C3AED] flex items-center justify-center text-white font-black shadow-md shadow-[#8B5CF6]/25 group-hover:scale-105 transition-all shrink-0">
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-[#8B5CF6] to-[#7C3AED] inline-flex items-center justify-center text-white font-black shadow-md shadow-[#8B5CF6]/25 group-hover:scale-105 transition-all shrink-0">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <div>
-              <div className="text-base sm:text-lg font-extrabold tracking-tight text-[#F8FAFC] flex items-center gap-1 sm:gap-1.5">
+            <div className="flex flex-col justify-center">
+              <div className="text-sm sm:text-base lg:text-lg font-extrabold tracking-tight text-[#F8FAFC] flex items-center gap-1 sm:gap-1.5 leading-none">
                 <span>BizPilot</span> <span className="text-[#8B5CF6] font-black">AI</span>
-                <span className="text-[9px] sm:text-[10px] uppercase font-semibold px-1 sm:px-1.5 py-0.5 rounded bg-[#8B5CF6]/15 text-[#A78BFA] border border-[#8B5CF6]/30">
+                <span className="text-[9px] uppercase font-semibold px-1.5 py-0.5 rounded bg-[#8B5CF6]/15 text-[#A78BFA] border border-[#8B5CF6]/30 leading-tight">
                   MSME
                 </span>
               </div>
-              <p className="text-[10px] text-[#707A8C] -mt-0.5 hidden sm:block font-medium">
+              <p className="text-[10px] text-[#707A8C] hidden 2xl:block font-medium mt-1 leading-tight truncate max-w-[180px]">
                 {language === 'ta' ? 'நிதி & வளர்ச்சி நுண்ணறிவு' : 'Funding & Growth Intelligence'}
               </p>
             </div>
           </div>
 
           {/* Navigation Mode Pill */}
-          <div className="hidden md:flex items-center p-1 bg-[#0D1118] rounded-xl border border-[#222936] text-xs shrink-0">
+          <div className="hidden md:inline-flex items-center h-9 p-1 bg-[#0D1118] rounded-xl border border-[#222936] text-xs shrink-0 select-none">
             <button
               onClick={() => onToggleAppMode(false)}
-              className={`px-3 py-1 rounded-lg font-medium transition-all ${
+              className={`h-7 px-2.5 sm:px-3 inline-flex items-center justify-center rounded-lg font-medium transition-all shrink-0 whitespace-nowrap ${
                 !isAppMode 
                   ? 'bg-[#8B5CF6] text-white shadow-sm font-semibold' 
                   : 'text-[#707A8C] hover:text-[#F8FAFC]'
@@ -130,69 +161,69 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => onToggleAppMode(true)}
-              className={`px-3 py-1 rounded-lg font-medium transition-all flex items-center gap-1.5 ${
+              className={`h-7 px-2.5 sm:px-3 inline-flex items-center justify-center gap-1.5 rounded-lg font-medium transition-all shrink-0 whitespace-nowrap ${
                 isAppMode 
                   ? 'bg-[#8B5CF6] text-white shadow-sm font-semibold' 
                   : 'text-[#707A8C] hover:text-[#F8FAFC]'
               }`}
             >
-              <Layers className="w-3.5 h-3.5" />
-              {t('nav.liveWorkspace', 'Live Workspace')}
+              <Layers className="w-3.5 h-3.5 shrink-0" />
+              <span>{t('nav.liveWorkspace', 'Live Workspace')}</span>
             </button>
           </div>
         </div>
 
         {/* Right side controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
           
           {/* Active MSME Profile or Authenticated Identity */}
           {isAuthenticated ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
               {isAdmin && onOpenAdminPortal && (
                 <button
                   onClick={onOpenAdminPortal}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#8B5CF6]/15 hover:bg-[#8B5CF6]/25 text-[#A78BFA] border border-[#8B5CF6]/30 text-xs font-bold transition-all shadow-sm"
+                  className="h-9 w-9 sm:w-auto sm:px-3 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#8B5CF6]/15 hover:bg-[#8B5CF6]/25 text-[#A78BFA] border border-[#8B5CF6]/30 text-xs font-bold transition-all shadow-sm shrink-0"
                   title={t('admin.adminPortal', 'Admin Portal')}
                 >
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                  <span className="hidden sm:inline">{t('admin.adminPortal', 'Admin Portal')}</span>
+                  <ShieldCheck className="w-4 h-4 text-[#8B5CF6] shrink-0" />
+                  <span className="hidden xl:inline">{t('admin.adminPortal', 'Admin Portal')}</span>
                 </button>
               )}
 
               {/* Active MSME Profile Selector for authenticated user with multiple MSMEs */}
-              <div className="relative">
+              <div className="relative shrink-0 min-w-0">
                 <button
                   onClick={() => {
                     if (profiles.length > 1) {
-                      setProfileDropdownOpen(!profileDropdownOpen);
+                      toggleProfileDropdown();
                     }
                   }}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#121722] border border-[#222936] text-xs text-[#A7B0C0] shadow-sm transition-all ${
+                  className={`h-9 px-2.5 lg:px-3 inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-[#121722] border border-[#222936] text-xs text-[#A7B0C0] shadow-sm transition-all min-w-0 max-w-[160px] sm:max-w-[190px] xl:max-w-[240px] shrink ${
                     profiles.length > 1 ? 'hover:bg-[#171D29] hover:border-[#303848] text-[#F8FAFC] cursor-pointer' : 'cursor-default'
                   }`}
                   title={profiles.length > 1 ? t('header.switchStartup', 'Switch MSME Business') : currentProfile.name}
                 >
-                  <Building className="w-3.5 h-3.5 text-[#8B5CF6]" />
-                  <div className="text-left hidden lg:block">
-                    <div className="font-semibold text-[#F8FAFC] leading-tight truncate max-w-[140px]">
+                  <Building className="w-3.5 h-3.5 text-[#8B5CF6] shrink-0" />
+                  <div className="text-left hidden lg:block leading-tight min-w-0 flex-1">
+                    <div className="font-semibold text-[#F8FAFC] truncate max-w-[95px] sm:max-w-[115px] xl:max-w-[150px]">
                       {currentProfile.name}
                     </div>
-                    <div className="text-[10px] text-[#707A8C] flex items-center gap-1">
-                      <span className="text-[#A78BFA] font-medium">{currentProfile.sector || 'MSME'}</span>
+                    <div className="text-[10px] text-[#707A8C] flex items-center gap-1 min-w-0">
+                      <span className="text-[#A78BFA] font-medium truncate max-w-[55px] xl:max-w-[80px]">{currentProfile.sector || 'MSME'}</span>
                       {profiles.length > 1 && (
-                        <span className="text-[9px] px-1 py-0.2 bg-[#8B5CF6]/15 text-[#A78BFA] rounded font-semibold border border-[#8B5CF6]/30">
-                          {profiles.length} MSMEs
+                        <span className="text-[9px] px-1 py-0.2 bg-[#8B5CF6]/15 text-[#A78BFA] rounded font-semibold border border-[#8B5CF6]/30 shrink-0">
+                          {profiles.length}
                         </span>
                       )}
                     </div>
                   </div>
                   {profiles.length > 1 && (
-                    <ChevronDown className={`w-3.5 h-3.5 text-[#707A8C] ml-1 transition-transform ${profileDropdownOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-3.5 h-3.5 text-[#707A8C] shrink-0 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} />
                   )}
                 </button>
 
                 {profiles.length > 1 && profileDropdownOpen && (
-                  <div className="absolute left-0 sm:right-0 sm:left-auto mt-2 w-72 bg-[#121722] border border-[#303848] rounded-2xl shadow-2xl p-2 z-50">
+                  <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-24px)] bg-[#121722] border border-[#303848] rounded-2xl shadow-2xl p-2 z-50">
                     <div className="flex items-center justify-between px-2.5 py-1 mb-1 border-b border-[#222936]">
                       <span className="text-[10px] font-semibold text-[#707A8C] uppercase tracking-wider">
                         {t('header.myStartups', 'My MSME Businesses')}
@@ -252,31 +283,34 @@ export const Header: React.FC<HeaderProps> = ({
               {/* User Account / Logout */}
               <button
                 onClick={onLogout}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#121722] hover:bg-rose-950/40 hover:text-rose-400 hover:border-rose-500/30 border border-[#222936] text-xs font-semibold text-[#A7B0C0] shadow-sm transition-all"
+                className="h-9 w-9 xl:w-auto xl:px-3 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#121722] hover:bg-rose-950/40 hover:text-rose-400 hover:border-rose-500/30 border border-[#222936] text-xs font-semibold text-[#A7B0C0] shadow-sm transition-all shrink-0"
                 title={t('auth.logout', 'Log Out')}
               >
-                <LogOut className="w-3.5 h-3.5 text-[#707A8C] hover:text-rose-400" />
-                <span className="hidden md:inline">{t('auth.logout', 'Log Out')}</span>
+                <LogOut className="w-3.5 h-3.5 text-[#707A8C] shrink-0" />
+                <span className="hidden xl:inline">{t('auth.logout', 'Log Out')}</span>
               </button>
             </div>
           ) : null}
 
           {/* Language Selector Dropdown */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
-              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-xs text-[#A7B0C0] hover:text-[#F8FAFC] shadow-sm transition-all font-medium"
+              onClick={toggleLangDropdown}
+              className="h-9 px-2 sm:px-2.5 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-xs text-[#A7B0C0] hover:text-[#F8FAFC] shadow-sm transition-all font-medium shrink-0"
               title={t('header.changeLanguage', 'Change Language')}
             >
-              <Globe className="w-3.5 h-3.5 text-[#14B8A6]" />
-              <span className="hidden sm:inline font-semibold">
+              <Globe className="w-3.5 h-3.5 text-[#14B8A6] shrink-0" />
+              <span className="hidden xl:inline font-semibold">
                 {language === 'ta' ? 'தமிழ்' : 'English'}
               </span>
-              <ChevronDown className="w-3.5 h-3.5 text-[#707A8C]" />
+              <span className="xl:hidden font-semibold text-[11px]">
+                {language === 'ta' ? 'தமிழ்' : 'EN'}
+              </span>
+              <ChevronDown className="w-3 h-3 text-[#707A8C] shrink-0" />
             </button>
 
             {langDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-[#121722] border border-[#303848] rounded-2xl shadow-2xl p-1.5 z-50">
+              <div className="absolute right-0 mt-2 w-48 max-w-[calc(100vw-24px)] bg-[#121722] border border-[#303848] rounded-2xl shadow-2xl p-1.5 z-50">
                 <div className="px-2.5 py-1 text-[10px] uppercase font-bold text-[#707A8C] tracking-wider">
                   {t('header.changeLanguage', 'Select Language')}
                 </div>
@@ -308,18 +342,18 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Notifications Toggle */}
-          <div className="relative">
+          <div className="relative shrink-0">
             <button
-              onClick={() => setNotifOpen(!notifOpen)}
-              className="relative p-2 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-[#A7B0C0] hover:text-[#F8FAFC] shadow-sm transition-all"
+              onClick={toggleNotifDropdown}
+              className="h-9 w-9 inline-flex items-center justify-center relative rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-[#A7B0C0] hover:text-[#F8FAFC] shadow-sm transition-all shrink-0"
               title="Alerts & AI Insights"
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#14B8A6]"></span>
+              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#14B8A6] ring-2 ring-[#121722]"></span>
             </button>
 
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-80 bg-[#121722] border border-[#303848] rounded-2xl shadow-2xl p-3 z-50 space-y-2">
+              <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-24px)] bg-[#121722] border border-[#303848] rounded-2xl shadow-2xl p-3 z-50 space-y-2">
                 <div className="flex items-center justify-between pb-2 border-b border-[#222936]">
                   <span className="text-xs font-bold text-[#F8FAFC]">
                     {language === 'ta' ? 'AI நுண்ணறிவு எச்சரிக்கைகள்' : 'AI Intelligence Alerts'}
@@ -350,37 +384,37 @@ export const Header: React.FC<HeaderProps> = ({
           {isAuthenticated && (
             <button
               onClick={onStartOnboarding}
-              className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] hover:border-[#303848] text-[#F8FAFC] text-xs font-semibold shadow-sm transition-all"
+              className="hidden 2xl:inline-flex items-center gap-1.5 h-9 px-3.5 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] hover:border-[#303848] text-[#F8FAFC] text-xs font-semibold shadow-sm transition-all shrink-0"
             >
-              <PlusCircle className="w-3.5 h-3.5 text-[#8B5CF6]" />
-              {t('header.startOnboarding', 'Set Up My Business')}
+              <PlusCircle className="w-3.5 h-3.5 text-[#8B5CF6] shrink-0" />
+              <span>{t('header.startOnboarding', 'Set Up My Business')}</span>
             </button>
           )}
 
           {/* MSME Credit Passport Action CTA */}
           <button
             onClick={onOpenCreditPassport}
-            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white text-xs font-bold shadow-md shadow-[#8B5CF6]/25 transition-all hover:-translate-y-0.5"
+            className="hidden sm:inline-flex items-center gap-1.5 h-9 px-2.5 xl:px-3.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white text-xs font-bold shadow-md shadow-[#8B5CF6]/25 transition-all hover:-translate-y-0.5 shrink-0"
           >
-            <FileText className="w-3.5 h-3.5" />
-            {t('header.openPassport', 'Credit Passport')}
+            <FileText className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden md:inline">{t('header.openPassport', 'Credit Passport')}</span>
           </button>
 
           {/* Unauthenticated Auth Buttons */}
           {!isAuthenticated && (
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="inline-flex items-center gap-1.5 shrink-0">
               <button
                 onClick={onOpenLogin}
-                className="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-xs font-semibold text-[#F8FAFC] shadow-sm transition-all hover:border-[#303848]"
+                className="h-9 px-2.5 sm:px-3.5 inline-flex items-center justify-center rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-xs font-semibold text-[#F8FAFC] shadow-sm transition-all hover:border-[#303848] shrink-0"
               >
                 {t('auth.signIn', 'Sign In')}
               </button>
               <button
                 onClick={onOpenRegister}
-                className="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white text-xs font-bold shadow-md shadow-[#8B5CF6]/25 transition-all"
+                className="h-9 px-2.5 sm:px-3.5 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] hover:from-[#7C3AED] hover:to-[#6D28D9] text-white text-xs font-bold shadow-md shadow-[#8B5CF6]/25 transition-all shrink-0"
               >
                 <span className="hidden sm:inline">{t('auth.registerMsme', 'Register MSME')}</span>
-                <span className="sm:hidden">Register</span>
+                <span className="sm:hidden">{t('auth.register', 'Register')}</span>
               </button>
             </div>
           )}
@@ -388,7 +422,7 @@ export const Header: React.FC<HeaderProps> = ({
           {!isAppMode ? (
             <button
               onClick={() => onToggleAppMode(true)}
-              className="flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#14B8A6] hover:opacity-95 text-white text-xs font-bold shadow-md shadow-[#8B5CF6]/20 transition-all hover:-translate-y-0.5 shrink-0"
+              className="h-9 px-3 sm:px-4 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#8B5CF6] to-[#14B8A6] hover:opacity-95 text-white text-xs font-bold shadow-md shadow-[#8B5CF6]/20 transition-all hover:-translate-y-0.5 shrink-0"
             >
               <span className="hidden sm:inline">{language === 'ta' ? 'பணியிடத்தை தொடங்கு' : 'Launch App'}</span>
               <span className="sm:hidden">{language === 'ta' ? 'பணியிடம்' : 'App'}</span>
@@ -397,7 +431,7 @@ export const Header: React.FC<HeaderProps> = ({
           ) : (
             <button
               onClick={() => onToggleAppMode(false)}
-              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-[#A7B0C0] text-xs font-medium shadow-sm transition-all shrink-0"
+              className="h-9 px-2.5 sm:px-3 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#121722] hover:bg-[#171D29] border border-[#222936] text-[#A7B0C0] hover:text-[#F8FAFC] text-xs font-medium shadow-sm transition-all shrink-0"
             >
               <span className="hidden sm:inline">{t('nav.productTour', 'Home Tour')}</span>
               <span className="sm:hidden">{language === 'ta' ? 'முகப்பு' : 'Home'}</span>
